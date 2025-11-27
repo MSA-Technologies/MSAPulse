@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------
+  # SEQ: Centralized Logging & Observability Server
+  # Dashboard: http://localhost:8081
+  # Ingestion Port: 5341
+  # ---------------------------------------------------------
+  seq:
+    image: datalust/seq:latest
+    container_name: MSAPulse-seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_NOAUTHENTICATION=true # Passwordless login for Development environment
+      # For Production, remove the line above and use the following:
+      # - SEQ_FIRSTRUN_ADMINPASSWORD=YourStrongPassword123!
+    ports:
+      - "8081:80"   # Port for Browser/Dashboard access
+      - "5341:5341" # Port for log ingestion (where apps send logs)
+    volumes:
+      - seq-data:/data # Persistent storage to prevent data loss
+
+# Define persistent volume
+volumes:
+  seq-data:
